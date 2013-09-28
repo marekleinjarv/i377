@@ -39,4 +39,7 @@
     <servlet-name>LogOut</servlet-name>
     <url-pattern>/LogOut</url-pattern>
   </servlet-mapping>
+  <listener>
+    <listener-class>SessionCounterListener</listener-class>
+  </listener>
 </web-app>
