@@ -10,7 +10,11 @@
 	<property name="ivy.retrieve.pattern" value="${dir.lib}/[artifact]-[type]-[revision].[ext]" />
 	<property name="webContent.dir" location="WebContent" />
 	<property name="war.file" location="hello.war" />
-	
+	<property name="tomcat.dir" location="T:tomcat/" />
+	<property name="managerUsername" value="tomcat" />
+	<property name="managerPassword" value="tomcat" />
+	<property name="managerUrl" value="http://localhost.8080/manager/text/" />
+
 	<path id="classpath">
 		<fileset dir="lib">
 			<include name="*.jar" />
@@ -21,23 +25,26 @@
 	</path>
 
 	<path id="classpath.tomcat">
-	<fileset dir="${tomcat.dir}/lib">
-	<include name="*.jar"/>
-	</fileset>
+		<fileset dir="${tomcat.dir}/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${dir.tomcat}/bin">
+			<include name="*.jar" />
+		</fileset>
 	</path>
-	
+
 	<path id="classpath.compile">
-	<fileset dir="${ivylib.dir}">
-	<include name="*.jar"/>
-	</fileset>
-	<fileset dir="${lib.dir}">
-	<include name="*.jar"/>
-	</fileset>
+		<fileset dir="${ivylib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
 	</path>
-	
-	<target name="compile" depends="clean, init">
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
-			<classpath refid="classpath" />
+
+	<target name="compile" depends="clean, init, retrieve">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" source="1.6" target="1.6" includeantruntime="false">
+			<classpath refid="classpath.compile" />
 		</javac>
 	</target>
 
@@ -46,14 +53,14 @@
 		<ivy:resolve file="${basedir}/ivy.xml" log="downloadonly" />
 		<ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="default" />
 	</target>
-	 
-	 <target name="war" depends="compile">
-	  <war destfile="${war.file}" webxml="${webContent.dir}/WEB-INF/web.xml">
-	   <classes dir="${classes.dir}" />
-	   <fileset dir="${webContent.dir}" excludes="**/servlet-apijar2.5.jar" />
-	  </war>
-	 </target>
-		
+
+	<target name="war" depends="compile">
+		<war destfile="${war.file}" webxml="${webContent.dir}/WEB-INF/web.xml">
+			<classes dir="${classes.dir}" />
+			<fileset dir="${webContent.dir}" excludes="**/servlet-apijar2.5.jar" />
+		</war>
+	</target>
+
 	<target name="init">
 		<mkdir dir="${classes.dir}" />
 	</target>
@@ -61,5 +68,21 @@
 	<target name="clean">
 		<delete dir="${build.dir}" />
 	</target>
+
+<!--	
+	
+	<target name="deploy" depends="war">
+		<taskdef name="deploy"
+			classname="org.apache.catalina.ant.DeployTask"
+			classpathref="classpath.tomcat" />
+		<deploy url="${managerUrl}" username="${managerUsername}" password="${managerPassword}" path="${deployContextPath}" update="true" war="file:${war.file} " />
+	</target>
+
+	<target name="undeploy">
+		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="classpath.tomcat" />
+		<undeploy url="${managerUrl}" username="${managerUsername}" password="${managerPassword}" path="${deployContextPath}" />
+	</target>
+
+-->
 
 </project>
