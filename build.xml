@@ -20,6 +20,21 @@
 		</fileset>
 	</path>
 
+	<path id="classpath.tomcat">
+	<fileset dir="${tomcat.dir}/lib">
+	<include name="*.jar"/>
+	</fileset>
+	</path>
+	
+	<path id="classpath.compile">
+	<fileset dir="${ivylib.dir}">
+	<include name="*.jar"/>
+	</fileset>
+	<fileset dir="${lib.dir}">
+	<include name="*.jar"/>
+	</fileset>
+	</path>
+	
 	<target name="compile" depends="clean, init">
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
 			<classpath refid="classpath" />
@@ -31,7 +46,6 @@
 		<ivy:resolve file="${basedir}/ivy.xml" log="downloadonly" />
 		<ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="default" />
 	</target>
-
 	 
 	 <target name="war" depends="compile">
 	  <war destfile="${war.file}" webxml="${webContent.dir}/WEB-INF/web.xml">
@@ -39,8 +53,7 @@
 	   <fileset dir="${webContent.dir}" excludes="**/servlet-apijar2.5.jar" />
 	  </war>
 	 </target>
-	
-	
+		
 	<target name="init">
 		<mkdir dir="${classes.dir}" />
 	</target>
