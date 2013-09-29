@@ -15,14 +15,17 @@ public class HomePage extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String id = session.getId();
-
-		Object attr = request.getParameter("param");
-		session.setAttribute("param", attr);
-		String sessionAttr = (String) session.getAttribute("param");
 
 		response.getWriter().println("Hello");
+
+		String id = session.getId();
 		response.getWriter().println("Your session id is " + id);
+
+		Object attr = request.getParameter("param");
+		if (attr != null)
+			session.setAttribute("param", attr);
+		String sessionAttr = (String) session.getAttribute("param");
+
 		response.getWriter().println("Session attribute is " + sessionAttr);
 	}
 
