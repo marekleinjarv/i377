@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="Hello" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="i377" default="war" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 
 	<property name="classes.dir" location="${build.dir}/classes" />
@@ -71,6 +71,7 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" />
+		<delete dir="${webContent.dir}/WEB-INF/lib" />
 	</target>
 
 <!--	
