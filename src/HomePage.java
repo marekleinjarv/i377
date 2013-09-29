@@ -15,7 +15,7 @@ public class HomePage extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String id = session.getId();
-		Object atr = session.getAttribute("param");
+		Object atr = session.getAttribute("?param=");
 		session.setAttribute("param", atr);
 
 		response.getWriter().println("Hello");
