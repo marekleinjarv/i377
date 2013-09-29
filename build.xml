@@ -66,6 +66,7 @@
 
 	<target name="init">
 		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${webContent.dir}/WEB-INF/lib" />
 	</target>
 
 	<target name="clean">
