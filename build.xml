@@ -13,6 +13,7 @@
 	<property name="managerPassword" value="tomcat" />
 	<property name="managerUrl" value="http://localhost.8080/manager/text/" />
 
+	
 	<path id="classpath">
 		<fileset dir="lib">
 			<include name="*.jar" />
@@ -74,30 +75,5 @@
 		<delete dir="${build.dir}" />
 		
 	</target>
-
-<!--	
-	
-	<target name="deploy" depends="war">
-		<taskdef name="deploy"
-			classname="org.apache.catalina.ant.DeployTask"
-			classpathref="classpath.tomcat" />
-		<deploy url="${managerUrl}"
-			username="${managerUsername}"
-			password="${managerPassword}" 
-			path="${deployContextPath}"
-			update="true" war="file:${war.file} " />
-	</target>
-
-	<target name="undeploy">
-		<taskdef name="undeploy" 
-			classname="org.apache.catalina.ant.UndeployTask" 
-			classpathref="classpath.tomcat" />
-		<undeploy url="${managerUrl}" 
-			username="${managerUsername}"
-			password="${managerPassword}"
-			path="${deployContextPath}" />
-	</target>
-
--->
 
 </project>
