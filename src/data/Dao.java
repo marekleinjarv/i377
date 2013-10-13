@@ -4,51 +4,58 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.pept.transport.Connection;
 
 public class Dao extends AbstractDao {
 
 	public boolean deleteAll() throws SQLException {
 		try {
-			st = getConnection().createStatement();
-			rs = st.executeQuery("DELETE FROM unit");
+			stmt = getConnection().createStatement();
+			rset = stmt.executeQuery("DELETE FROM unit");
 		} finally {
 			closeResources();
 		}
 		return true;
 	}
 
-	public boolean deleteItem(int id) throws SQLException {
+	public void deleteItem(int id) throws SQLException {
 		try {
-			st = getConnection().createStatement();
-			rs = st.executeQuery("DELETE FROM unit WHERE id = " + id);
+			pst = getConnection().prepareStatement("DELETE FROM unit WHERE id = ?;");
+			pst.setInt(1, id);
+			pst.execute();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			closeResources();
 		}
-		return true;
 	}
 
-	public boolean addItem(String name, String code) throws SQLException {
+	public void addItem(String name, String code) throws SQLException {
 		try {
-			st = getConnection().createStatement();
-			rs = st.executeQuery("INSERT INTO unit VALUES (NEXT VALUE FOR seq1), '"
-					+ name + "', '" + code + "'");
+			pst = getConnection()
+					.prepareStatement("INSERT INTO unit (id, name, code) VALUES (NEXT VALUE FOR seq1, ?, ?);");
+			pst.setString(1, name);
+			pst.setString(2, code);
+			pst.execute();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			closeResources();
 		}
-		return true;
 	}
 
 	public List<Unit> search(String keyword) throws SQLException {
 		List<Unit> items = new ArrayList<Unit>();
 		try {
-			st = getConnection().createStatement();
-			rs = st.executeQuery("SELECT * FROM unit WHERE LCASE(name) LIKE '%"
-					+ keyword.toLowerCase() + "%'");
-			while (rs.next()) {
+			stmt = getConnection().createStatement();
+			rset = stmt
+					.executeQuery("SELECT * FROM unit WHERE LCASE(name) LIKE '%"
+							+ keyword.toLowerCase() + "%'");
+			while (rset.next()) {
 				Unit item = new Unit();
-				item.setId(rs.getInt("id"));
-				item.setName(rs.getString("name"));
-				item.setCode(rs.getString("code"));
+				item.setId(rset.getInt("id"));
+				item.setName(rset.getString("name"));
+				item.setCode(rset.getString("code"));
 				items.add(item);
 			}
 		} finally {
@@ -60,13 +67,13 @@ public class Dao extends AbstractDao {
 	public List<Unit> findAllItems() throws SQLException {
 		List<Unit> items = new ArrayList<Unit>();
 		try {
-			st = getConnection().createStatement();
-			rs = st.executeQuery("SELECT * FROM unit");
-			while (rs.next()) {
+			stmt = getConnection().createStatement();
+			rset = stmt.executeQuery("SELECT * FROM unit");
+			while (rset.next()) {
 				Unit item = new Unit();
-				item.setId(Integer.parseInt(rs.getString("id")));
-				item.setName(rs.getString("name"));
-				item.setCode(rs.getString("code"));
+				item.setId(Integer.parseInt(rset.getString("id")));
+				item.setName(rset.getString("name"));
+				item.setCode(rset.getString("code"));
 				items.add(item);
 			}
 		} finally {
@@ -74,5 +81,4 @@ public class Dao extends AbstractDao {
 		}
 		return items;
 	}
-
 }

@@ -6,47 +6,46 @@ import org.apache.commons.dbutils.DbUtils;
 
 public abstract class AbstractDao {
 
-    public static final String DB_URL =
-            "jdbc:hsqldb:file:${user.home}/data/marekleinjarv/db;shutdown=true;";
+	public static final String DB_URL = "jdbc:hsqldb:file:${user.home}/data/marekleinjarv/db;shutdown=true;hsqldb.lock_file=false";
 
-    private Connection connection;
-    protected PreparedStatement pst;
-    protected Statement st;
-    protected ResultSet rs;
+	private Connection conn;
+	protected PreparedStatement pst;
+	protected Statement stmt;
+	protected ResultSet rset;
 
-    static {
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	static {
+		try {
+			Class.forName("org.hsqldb.jdbcDriver");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    protected Connection getConnection() {
-        try {
-            connection = DriverManager.getConnection(DB_URL, "sa", "");
-            return connection;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	protected Connection getConnection() {
+		try {
+			conn = DriverManager.getConnection(DB_URL, "sa", "");
+			return conn;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    protected void closeResources() {
-        DbUtils.closeQuietly(rs);
-        DbUtils.closeQuietly(pst);
-        DbUtils.closeQuietly(st);
-        DbUtils.closeQuietly(connection);
-    }
+	protected void closeResources() {
+		DbUtils.closeQuietly(rset);
+		DbUtils.closeQuietly(pst);
+		DbUtils.closeQuietly(stmt);
+		DbUtils.closeQuietly(conn);
+	}
 
-    protected void executeQuery(String queryString) {
-        try {
-             st = getConnection().createStatement();
-             st.executeUpdate(queryString);
-         } catch (Exception e) {
-             throw new RuntimeException(e);
-         } finally {
-             closeResources();
-         }
-    }
+	protected void executeQuery(String queryString) {
+		try {
+			stmt = getConnection().createStatement();
+			stmt.executeUpdate(queryString);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			closeResources();
+		}
+	}
 
 }
